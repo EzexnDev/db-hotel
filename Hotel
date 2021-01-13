@@ -1,0 +1,115 @@
+-- phpMyAdmin SQL Dump
+-- version 4.9.7
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:8889
+-- Generation Time: Jan 13, 2021 at 05:22 PM
+-- Server version: 5.7.32
+-- PHP Version: 7.4.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `Hotel`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Bookings`
+--
+
+CREATE TABLE `Bookings` (
+  `booking_id` int(11) NOT NULL,
+  `customers_id` int(11) DEFAULT NULL,
+  `rooms_id` int(11) DEFAULT NULL,
+  `nights` int(11) NOT NULL,
+  `breakfast` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Customers`
+--
+
+CREATE TABLE `Customers` (
+  `id` int(11) NOT NULL,
+  `first_name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `email` varchar(20) NOT NULL,
+  `address` varchar(50) NOT NULL,
+  `postcode` int(11) DEFAULT NULL,
+  `city` varchar(58) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Rooms`
+--
+
+CREATE TABLE `Rooms` (
+  `id` int(11) NOT NULL,
+  `room_type` varchar(30) NOT NULL,
+  `price_night` float NOT NULL,
+  `max_people` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `Bookings`
+--
+ALTER TABLE `Bookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `customers_id` (`customers_id`),
+  ADD KEY `rooms_id` (`rooms_id`);
+
+--
+-- Indexes for table `Customers`
+--
+ALTER TABLE `Customers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `Rooms`
+--
+ALTER TABLE `Rooms`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `Bookings`
+--
+ALTER TABLE `Bookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `Customers`
+--
+ALTER TABLE `Customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `Rooms`
+--
+ALTER TABLE `Rooms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `Bookings`
+--
+ALTER TABLE `Bookings`
+  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`customers_id`) REFERENCES `Customers` (`id`),
+  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`rooms_id`) REFERENCES `Rooms` (`id`);
