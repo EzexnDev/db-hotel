@@ -11,7 +11,7 @@
     SELECT * FROM ospiti WHERE name LIKE 'D%'
 
 •	Calcola il totale degli ordini accepted
-SELECT SUM(price) FROM `pagamenti` WHERE status = 'accepted'
+    SELECT SUM(price) FROM `pagamenti` WHERE status = 'accepted'
 
 •	Qual è il prezzo massimo pagato?
     SELECT MAX(price) FROM `pagamenti`
@@ -36,3 +36,30 @@ SELECT SUM(price) FROM `pagamenti` WHERE status = 'accepted'
 
 •	Fai una analisi per vedere se ci sono ore in cui le prenotazioni sono più frequenti
     SELECT HOUR(created_at), COUNT(stanza_id) FROM prenotazioni GROUP BY HOUR(created_at) ORDER BY `COUNT(stanza_id)` DESC
+
+•	Quante prenotazioni ha fatto l’ospite che ha fatto più prenotazioni?
+     SELECT ospiti.name, COUNT(*) FROM prenotazioni_has_ospiti JOIN ospiti ON ospiti.id = prenotazioni_has_ospiti.ospite_id GROUP BY ospite_id HAVING COUNT(*) > 2
+
+•	Stampare tutti gli ospiti per ogni prenotazione
+    SELECT ospiti.name, prenotazioni_has_ospiti.prenotazione_id FROM prenotazioni_has_ospiti JOIN ospiti ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+
+•	Stampare Nome, Cognome, Prezzo e Pagante per tutte le prenotazioni fatte a Maggio 2018
+    SELECT prenotazioni.created_at, ospiti.name, ospiti.lastname, pagamenti.price, paganti.name FROM prenotazioni
+    JOIN prenotazioni_has_ospiti
+    ON prenotazioni_has_ospiti.prenotazione_id = prenotazioni.id
+    JOIN ospiti
+    ON ospiti.id = prenotazioni_has_ospiti.ospite_id
+    JOIN pagamenti
+    ON pagamenti.prenotazione_id = prenotazioni.id
+    LEFT JOIN paganti
+    ON paganti.ospite_id = ospiti.id
+    WHERE YEAR(prenotazioni.created_at) = "2018" AND MONTH(prenotazioni.created_at) = "05"
+
+•   Fai la somma di tutti i prezzi delle prenotazioni per le stanze del primo piano
+    SELECT SUM(pagamenti.price) FROM pagamenti JOIN prenotazioni ON prenotazioni.id = pagamenti.prenotazione_id JOIN stanze ON prenotazioni.stanza_id = stanze.id WHERE stanze.floor = 1
+
+• 	Prendi i dati di fatturazione per la prenotazione con id=7
+    SELECT ospiti.id, ospiti.name, ospiti.lastname, ospiti.document_type, ospiti.document_number FROM ospiti JOIN prenotazioni_has_ospiti ON prenotazioni_has_ospiti.ospite_id = ospiti.id WHERE prenotazioni_has_ospiti.prenotazione_id = 7
+
+●	Le stanze sono state tutte prenotate almeno una volta? (Visualizzare le stanze non ancora prenotate)
+    SELECT stanza_id, COUNT(*) FROM prenotazioni right JOIN stanze ON prenotazioni.stanza_id = stanze.id GROUP BY stanza_id HAVING COUNT(*) < 1
